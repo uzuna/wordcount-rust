@@ -8,6 +8,6 @@ fn main() {
     let file = File::open(filename).unwrap();
     let reader = BufReader::new(&file);
 
-    let fregs = count(reader);
+    let fregs = count(reader, CountOption::default());
     println!("{:?}", fregs);
 }
