@@ -24,6 +24,18 @@ impl Default for CountOption {
   }
 }
 
+/// # Example
+/// 入力中の単語の頻度を数える例
+///
+/// ```
+/// use std::io::Cursor;
+/// use wordcount::{count, CountOption};
+///
+/// let mut input = Cursor::new("aa bb cc bb");
+/// let freq = count(input, CountOption::Word);
+///
+/// assert_eq!(freq["aa"], 1);
+/// ```
 pub fn count(input: impl BufRead, option: CountOption) -> HashMap<String, usize> {
   let re = Regex::new(r"\w+").unwrap();
   let mut fregs = HashMap::new();
