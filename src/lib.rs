@@ -1,3 +1,5 @@
+//! wordcountはシンプルな文字、単語、行の出現頻度の計数機能を提供します
+//! 詳しくは[`count`](fn.count.html)関数のドキュメントを見てください
 use regex::Regex;
 use std::collections::HashMap;
 use std::io::BufRead;
@@ -15,6 +17,7 @@ pub enum CountOption {
   Line,
 }
 
+/// デフォルトは[`Word`](enum.CountOption.html#variant.Word)
 impl Default for CountOption {
   fn default() -> Self {
     CountOption::Word
@@ -59,4 +62,44 @@ fn read_testfile() {
   assert_eq!(Some(&2), fregs.get("bb"));
   assert_eq!(Some(&2), fregs.get("cc"));
   assert_eq!(Some(&1), fregs.get("dd"));
+}
+
+#[test]
+fn word_count_works() {
+  use std::io::Cursor;
+
+  let mut exp = HashMap::new();
+  exp.insert("aa".to_string(), 1);
+  exp.insert("bb".to_string(), 2);
+  exp.insert("cc".to_string(), 1);
+
+  assert_eq!(count(Cursor::new("aa bb cc bb"), CountOption::Word), exp);
+}
+
+#[test]
+fn return_result() -> std::io::Result<()> {
+  Ok(())
+}
+
+/// panicするテストは`should_panic`アトリビュートを付ける
+#[test]
+#[should_panic]
+fn is_panic() {
+  panic!("panic!");
+}
+
+/// Mapの複数のKey-Valueペアに対してassertするマクロ
+macro_rules! assert_map {
+  ($expr: expr, {$($key: expr => $value:expr),*}) => {
+    $(assert_eq!($expr[$key], $value));*
+  };
+}
+
+#[test]
+fn word_count_works3() {
+  use std::io::Cursor;
+
+  let freqs = count(Cursor::new("aa bb cc"), CountOption::Word);
+
+  assert_map!(freqs, {"aa"=>1, "cc"=>1, "bb"=>1});
 }
